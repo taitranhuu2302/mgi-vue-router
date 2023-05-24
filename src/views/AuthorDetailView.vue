@@ -18,12 +18,8 @@ const authorDetail = ref<AuthorType>({
   sex: 'Male'
 })
 
-onMounted(() => {
-  getData()
-})
-onUpdated(() => {
-  getData()
-})
+onMounted(() => getData())
+onUpdated(() => getData())
 
 const getData = () => {
   const { id } = router.currentRoute.value.params
