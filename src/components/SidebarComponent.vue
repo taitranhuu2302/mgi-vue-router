@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { LIST_AUTHOR } from '@/constant/Author'
+import { useAuthorStore } from '@/stores/useAuthorStore'
+
+const authorStore = useAuthorStore()
 </script>
 
 <template>
@@ -8,7 +10,7 @@ import { LIST_AUTHOR } from '@/constant/Author'
       <div class="space-y-3">
         <h2 class="text-sm font-semibold tracking-widest uppercase">Author</h2>
         <div class="flex flex-col space-y-2">
-          <template v-for="author in LIST_AUTHOR" :key="author.id">
+          <template v-for="author in authorStore.authors" :key="author.id">
             <router-link
               :to="{ name: 'author-detail', params: { id: author.id } }"
               class="hover:text-blue-500 flex justify-between"

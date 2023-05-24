@@ -3,9 +3,11 @@ import { defineProps, defineEmits, reactive, watch, ref } from 'vue'
 import { BookType } from '@/types/Book'
 import { LIST_AUTHOR } from '@/constant/Author'
 import { convertToSlug, guidGenerator } from '@/utils'
+import { useBookStore } from '@/stores/useBookStore'
 
 const props = defineProps<{ open: boolean }>()
-const emit = defineEmits(['update:open', 'addNewBook'])
+const emit = defineEmits(['update:open'])
+const bookStore = useBookStore()
 const book = reactive<BookType>({
   author: 0,
   date: '',
@@ -32,7 +34,7 @@ const handleCreateBook = () => {
     messageError.value = 'Please enter the full field'
     return
   }
-  emit('addNewBook', newBook)
+  bookStore.addNewBook(newBook)
   onClose()
 }
 

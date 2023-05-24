@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { defineProps } from 'vue'
 import { getAuthorName, onErrorImage } from '@/utils'
+import { useBookStore } from '@/stores/useBookStore'
 import { BookType } from '@/types/Book'
-import { defineProps, defineEmits } from 'vue'
 
+const bookStore = useBookStore()
 const props = defineProps<{
-  listBook: BookType[]
+  books: BookType[]
 }>()
-const emit = defineEmits(['onDeleteBook'])
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const emit = defineEmits(['onDeleteBook'])
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <template v-for="book in props.listBook" :key="book.id">
+        <template v-for="book in props.books" :key="book.id">
           <tr>
             <td class="w-[5%]">
               <div class="table-text">{{ book.id }}</div>
@@ -69,7 +70,7 @@ const emit = defineEmits(['onDeleteBook'])
                 >
                   <i class="fas fa-info-square text-lg"></i>
                 </router-link>
-                <button class="text-red-500" @click="emit('onDeleteBook', book.id)">
+                <button class="text-red-500" @click="bookStore.onDeleteBook(book.id)">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>

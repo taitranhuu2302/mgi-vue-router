@@ -4,11 +4,14 @@ import { onMounted, onUpdated, ref, watch } from 'vue'
 import { BookType } from '@/types/Book'
 import { useRouter } from 'vue-router'
 import { AuthorType } from '@/types/Author'
-import { LIST_AUTHOR } from '@/constant/Author'
 import TableBooks from '@/components/TableBooks.vue'
+import { useBookStore } from '@/stores/useBookStore'
+import { useAuthorStore } from '@/stores/useAuthorStore'
 
 const listBook = ref<BookType[]>([])
 const router = useRouter()
+const bookStore = useBookStore()
+const authorStore = useAuthorStore()
 const authorDetail = ref<AuthorType>({
   dob: '',
   firstName: '',
@@ -23,12 +26,8 @@ onUpdated(() => getData())
 
 const getData = () => {
   const { id } = router.currentRoute.value.params
-  const books: BookType[] = localStorage.getItem('books')
-    ? JSON.parse(localStorage.getItem('books') as string)
-    : []
-
-  listBook.value = books.filter((item) => item.author === Number(id))
-  const author = LIST_AUTHOR.find((item) => item.id === Number(id))
+  listBook.value = bookStore.getBookByAuthor(Number(id))
+  const author = authorStore.getAuthorById(Number(id))
   if (!author) {
     router.push('/error-page')
     return
@@ -65,7 +64,7 @@ watch(authorDetail, () => {
         <button class="bg-green-600 hover:bg-green-700 py-2 px-3 rounded text-white">Update</button>
       </div>
     </div>
-    <TableBooks :list-book="listBook" />
+    <TableBooks :books="listBook" />
   </MainLayout>
 </template>
 

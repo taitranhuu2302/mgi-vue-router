@@ -1,32 +1,12 @@
 <script setup lang="ts">
 import MainLayout from '@/layouts/MainLayout.vue'
 import CreateBookModal from '@/components/CreateBookModal.vue'
-import { onMounted, ref } from 'vue'
-import { BookType } from '@/types/Book'
+import { ref } from 'vue'
 import TableBooks from '@/components/TableBooks.vue'
+import { useBookStore } from '@/stores/useBookStore'
 
 const openCreateBookModal = ref<boolean>(false)
-const listBook = ref<BookType[]>([])
-
-onMounted(() => {
-  listBook.value = localStorage.getItem('books')
-    ? JSON.parse(localStorage.getItem('books') as string)
-    : []
-})
-
-const addNewBook = (book: BookType) => {
-  listBook.value = [book, ...listBook.value]
-  updateDataLocal()
-}
-
-const updateDataLocal = () => {
-  localStorage.setItem('books', JSON.stringify(listBook.value))
-}
-
-const onDeleteBook = (id: string) => {
-  listBook.value = listBook.value.filter((item) => item.id !== id)
-  updateDataLocal()
-}
+const bookStore = useBookStore()
 </script>
 
 <template>
@@ -39,9 +19,9 @@ const onDeleteBook = (id: string) => {
         Create new book
       </button>
     </div>
-    <TableBooks :listBook="listBook" @onDeleteBook="onDeleteBook" />
+    <TableBooks :books="bookStore.books" />
   </MainLayout>
-  <CreateBookModal v-model:open="openCreateBookModal" @addNewBook="addNewBook" />
+  <CreateBookModal v-model:open="openCreateBookModal" />
 </template>
 
 <style scoped></style>
