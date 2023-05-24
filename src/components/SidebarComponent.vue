@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-import {LIST_AUTHOR} from "@/constant/Author";
+import { LIST_AUTHOR } from '@/constant/Author'
 </script>
 
 <template>
@@ -10,8 +9,10 @@ import {LIST_AUTHOR} from "@/constant/Author";
         <h2 class="text-sm font-semibold tracking-widest uppercase">Author</h2>
         <div class="flex flex-col space-y-2">
           <template v-for="author in LIST_AUTHOR" :key="author.id">
-            <router-link :to="{name: 'author-detail', params: {id: author.id}}"
-                         class="hover:text-blue-500 flex justify-between">
+            <router-link
+              :to="{ name: 'author-detail', params: { id: author.id } }"
+              class="hover:text-blue-500 flex justify-between"
+            >
               {{ author.name }}
               <i class="far fa-long-arrow-right"></i>
             </router-link>
@@ -22,6 +23,4 @@ import {LIST_AUTHOR} from "@/constant/Author";
   </aside>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

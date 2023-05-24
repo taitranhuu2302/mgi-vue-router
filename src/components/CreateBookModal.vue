@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, reactive, watch } from 'vue'
+import { defineProps, defineEmits, reactive, watch, ref } from 'vue'
 import { BookType } from '@/types/Book'
 import { LIST_AUTHOR } from '@/constant/Author'
 import { convertToSlug, guidGenerator } from '@/utils'
 
 const props = defineProps<{ open: boolean }>()
-const emit = defineEmits(['update:open'])
+const emit = defineEmits(['update:open', 'addNewBook'])
 const book = reactive<BookType>({
-  author: '',
+  author: 0,
   date: '',
   id: '',
   price: 0,
@@ -15,6 +15,7 @@ const book = reactive<BookType>({
   title: '',
   image: ''
 })
+const messageError = ref<string>('')
 
 watch(book, () => {
   book.slug = convertToSlug(book.title)
@@ -24,9 +25,31 @@ const handleCreateBook = () => {
   const newBook: BookType = {
     ...book,
     date: new Date().toDateString(),
-    id: guidGenerator()
+    id: guidGenerator(),
+    slug: `${book.slug}-${new Date().getTime()}`
   }
-  console.log(newBook)
+  if (!newBook.title || !newBook.author || !newBook.price) {
+    messageError.value = 'Please enter the full field'
+    return
+  }
+  emit('addNewBook', newBook)
+  onClose()
+}
+
+const onClose = () => {
+  emit('update:open', false)
+  clearData()
+}
+
+const clearData = () => {
+  book.id = ''
+  book.title = ''
+  book.image = ''
+  book.price = 0
+  book.slug = ''
+  book.date = ''
+  book.author = 0
+  messageError.value = ''
 }
 </script>
 
@@ -42,7 +65,7 @@ const handleCreateBook = () => {
             <h3 class="text-xl text-center">Create Book</h3>
             <div>
               <label for="title">Title</label>
-              <input v-model="book.title" type="text" name="title" id="title" />
+              <input v-model.trim="book.title" type="text" name="title" id="title" />
             </div>
             <div>
               <label for="price">Price</label>
@@ -63,9 +86,10 @@ const handleCreateBook = () => {
             </div>
             <div>
               <label for="image">Image Link</label>
-              <input v-model="book.image" type="text" name="image" id="image" />
+              <input v-model.trim="book.image" type="text" name="image" id="image" />
             </div>
           </div>
+          <p v-if="!!messageError" class="text-red-600 text-center">{{ messageError }}</p>
           <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
               @click="handleCreateBook"
@@ -74,11 +98,7 @@ const handleCreateBook = () => {
             >
               Save
             </button>
-            <button
-              type="button"
-              class="btn bg-white text-gray-900"
-              @click="emit('update:open', false)"
-            >
+            <button type="button" class="btn bg-white text-gray-900" @click="onClose">
               Cancel
             </button>
           </div>

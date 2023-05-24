@@ -1,46 +1,45 @@
-import * as VueRouter from "vue-router";
-
+import * as VueRouter from 'vue-router'
 
 const routes: VueRouter.RouteRecordRaw[] = [
   {
-    path: "/",
+    path: '/',
     components: {
-      default: () => import("@/layouts/RootLayout.vue"),
-      Header: () => import("@/components/HeaderComponent.vue"),
+      default: () => import('@/layouts/RootLayout.vue'),
+      Header: () => import('@/components/HeaderComponent.vue')
     },
     children: [
       {
-        path: "",
+        path: '',
         strict: true,
         components: {
-          default: () => import("@/views/HomeView.vue"),
+          default: () => import('@/views/HomeView.vue')
         }
       },
       {
-        path: "books/:slug",
-        name: "book-detail",
+        path: 'books/:slug',
+        name: 'book-detail',
         components: {
-          default: () => import("@/views/BookDetailView.vue")
+          default: () => import('@/views/BookDetailView.vue')
         }
       },
       {
-        path: "authors/:id",
-        name: "author-detail",
+        path: 'authors/:id',
+        name: 'author-detail',
         components: {
-          default: () => import("@/views/AuthorDetailView.vue")
+          default: () => import('@/views/AuthorDetailView.vue')
         }
       }
     ]
   },
   {
-    path: "/:pathMatch(.*)",
-    component: () => import("@/views/ErrorView.vue")
-  },
+    path: '/:pathMatch(.*)',
+    component: () => import('@/views/ErrorView.vue')
+  }
 ]
 
 const router = VueRouter.createRouter({
-  history: VueRouter.createWebHashHistory(),
+  history: VueRouter.createWebHistory(),
   routes
 })
 
-export default router;
+export default router
